@@ -1,0 +1,13 @@
+Project Title: Voice-to-Text Notes for Logistics
+Tech Stack: Python, OpenAI Whisper, Streamlit, Pandas, Tesseract (optional), CSV
+
+Developed a voice-enabled logistics note-taking application that uses speech recognition to transcribe spoken shipment updates into structured text. 
+The system saves voice inputs as timestamped text entries in a CSV file, making it easy for logistics teams to track and document verbal updates.
+
+Integrated OpenAI Whisper to transcribe voice recordings with high accuracy.
+
+Used Streamlit to build an interactive web interface for uploading audio files and viewing transcribed notes.
+
+Automatically stored transcriptions with timestamps in a CSV using Pandas.
+
+Enabled users to download the entire log for reporting or integration with other systems.
