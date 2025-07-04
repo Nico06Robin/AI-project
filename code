@@ -1,0 +1,47 @@
+import streamlit as st
+import pandas as pd
+import datetime
+import os
+import whisper
+import tempfile
+
+# Load Whisper model
+model = whisper.load_model("base")
+
+st.title("🎙️ Voice to Text Notes for Logistics")
+
+# Upload audio file
+audio_file = st.file_uploader("Upload a voice note (MP3/WAV/M4A)", type=["mp3", "wav", "m4a"])
+
+if audio_file:
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp_file:
+        tmp_file.write(audio_file.read())
+        tmp_path = tmp_file.name
+
+    st.info("Transcribing...")
+    result = model.transcribe(tmp_path)
+    note_text = result["text"]
+
+    # Display transcription
+    st.success("Transcription:")
+    st.write(note_text)
+
+    # Save to CSV with timestamp
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    note_entry = {"Timestamp": timestamp, "Note": note_text}
+
+    if os.path.exists("notes.csv"):
+        df = pd.read_csv("notes.csv")
+        df = pd.concat([df, pd.DataFrame([note_entry])], ignore_index=True)
+    else:
+        df = pd.DataFrame([note_entry])
+
+    df.to_csv("notes.csv", index=False)
+
+    # Show saved notes
+    st.subheader("🗒️ Saved Notes")
+    st.dataframe(df)
+
+    # Download option
+    st.download_button("Download Notes CSV", data=df.to_csv(index=False), file_name="notes.csv")
+
